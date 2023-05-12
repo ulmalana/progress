@@ -3,7 +3,7 @@
             [com.progress.email :as email]
             [com.progress.app :as app]
             [com.progress.home :as home]
-            [com.progress.worker :as worker]
+    ;[com.progress.worker :as worker]
             [com.progress.schema :as schema]
             [clojure.test :as test]
             [clojure.tools.logging :as log]
@@ -17,7 +17,8 @@
    (biff/authentication-plugin {})
    home/plugin
    schema/plugin
-   worker/plugin])
+   ;worker/plugin
+   ])
 
 (def routes [["" {:middleware [biff/wrap-site-defaults]}
               (keep :routes plugins)]

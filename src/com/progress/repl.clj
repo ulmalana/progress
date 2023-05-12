@@ -4,6 +4,28 @@
             [clojure.edn :as edn]
             [clojure.java.io :as io]))
 
+(def seed-data
+  [{:db/doc-type :learn
+    :xt/id (random-uuid)
+    :learn/user "User 1"
+    :learn/created-at :db/now
+    :learn/updated-at :db/now
+    :learn/name "Biff"
+    :learn/source "https://biffweb.com"
+    :learn/type "Online course"
+    :learn/notes "Started learning Biff"
+    :learn/status "Incomplete"}
+   {:db/doc-type :learn
+    :xt/id (random-uuid)
+    :learn/user "User 2"
+    :learn/created-at :db/now
+    :learn/updated-at :db/now
+    :learn/name "Clojure for the brave"
+    :learn/source "https://braveclojure.com"
+    :learn/type "Online book"
+    :learn/notes "Started learning Clojure brave"
+    :learn/status "Complete"}])
+
 (defn get-context []
   (biff/assoc-db @main/system))
 
@@ -12,6 +34,14 @@
     (-> (io/resource "fixtures.edn")
         slurp
         edn/read-string)))
+
+(defn add-seed-data []
+  (biff/submit-tx  (get-context) seed-data))
+
+(defn get-all-data [ctx]
+  (let [{:keys [biff/db]} ctx]
+    (q db '{:find (pull learn-id [*])
+            :where [[learn-id :learn/user]]})))
 
 (comment
 
@@ -27,6 +57,9 @@
          :where [[user :user/email]]}))
 
   (sort (keys (get-context)))
+
+  (add-seed-data)
+  (get-all-data (get-context))
 
   ;; Check the terminal for output.
   (biff/submit-job (get-context) :echo {:foo "bar"})

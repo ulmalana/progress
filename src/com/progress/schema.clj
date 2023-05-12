@@ -1,20 +1,17 @@
 (ns com.progress.schema)
 
 (def schema
-  {:user/id :uuid
-   :user [:map {:closed true}
-          [:xt/id                     :user/id]
-          [:user/email                :string]
-          [:user/joined-at            inst?]
-          [:user/foo {:optional true} :string]
-          [:user/bar {:optional true} :string]]
-
-   :msg/id :uuid
-   :msg [:map {:closed true}
-         [:xt/id       :msg/id]
-         [:msg/user    :user/id]
-         [:msg/text    :string]
-         [:msg/sent-at inst?]]})
+  {:learn/id :uuid
+   :learn [:map {:closed true}
+           [:xt/id                     :learn/id]
+           [:learn/user                :string]
+           [:learn/created-at            inst?]
+           [:learn/updated-at inst?]
+           [:learn/name :string]
+           [:learn/source :string]
+           [:learn/type :string]
+           [:learn/notes :string]
+           [:learn/status :string]]})
 
 (def plugin
   {:schema schema})

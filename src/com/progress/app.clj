@@ -131,6 +131,26 @@
         :on-close (fn [ws status-code reason]
                     (swap! chat-clients disj ws))}})
 
+(defn get-all-data [ctx]
+  (let [{:keys [biff/db]} ctx]
+    (q db '{:find (pull learn-id [*])
+            :where [[learn-id :learn/user]]})))
+
+(defn new-app [ctx]
+  (ui/page
+    {}
+    (let [all-data (get-all-data ctx)]
+      (for [data all-data]
+        [:div
+         [:p (str "learning id: " (:xt/id data))]
+         [:p (str "user: " (:learn/user data))]
+         [:p (str "learning name: " (:learn/name data))]
+         [:p (str "created at: " (:learn/created-at data))]
+         [:p (str "updated at: " (:learn/updated-at data))]
+         [:p (str "source: " (:learn/source data))]
+         [:p (str "type: " (:learn/type data))]
+         [:p (str "notes: " (:learn/notes data))]
+         [:p (str "status: " (:learn/status data))]]))))
 (def about-page
   (ui/page
    {:base/title (str "About " settings/app-name)}
@@ -144,6 +164,13 @@
 
 (def plugin
   {:static {"/about/" about-page}
+   :routes [["/progress" {:get app}]
+            ["/test" {:get new-app}]]
+   :api-routes [["/api/echo" {:post echo}]]
+   :on-tx notify-clients})
+
+#_(def plugin
+    {:static   {"/about/" about-page}
    :routes ["/app" {:middleware [mid/wrap-signed-in]}
             ["" {:get app}]
             ["/set-foo" {:post set-foo}]

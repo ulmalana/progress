@@ -12,7 +12,11 @@
    "Until you add API keys for Postmark and reCAPTCHA, we'll print your sign-up "
    "link to the console. See config.edn."])
 
-(defn home-page [{:keys [recaptcha/site-key params] :as ctx}]
+(defn home-page [_]
+  (ui/page
+    {}
+    [:h2 "halo"]))
+#_(defn home-page [{:keys [recaptcha/site-key params] :as ctx}]
   (ui/page
    (assoc ctx ::ui/recaptcha true)
    (biff/form
@@ -164,6 +168,12 @@
      "Send another code"])))
 
 (def plugin
+  {:routes [["/" {:get home-page}]
+            ["/link-sent" {:get link-sent}]
+            ["/verify-link" {:get verify-email-page}]
+            ["/signin" {:get signin-page}]
+            ["/verify-code" {:get enter-code-page}]]})
+#_(def plugin
   {:routes [["" {:middleware [mid/wrap-redirect-signed-in]}
              ["/"                  {:get home-page}]]
             ["/link-sent"          {:get link-sent}]

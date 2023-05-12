@@ -15,7 +15,7 @@ Made with [Biff](https://biffweb.com/) framework.
 
 ## Model
 ```clojure
-{:learning-id uuid/int 
+{:xt/id uuid/int ;learning-id  
  :username string 
  :created-at date 
  :updated-at date 
